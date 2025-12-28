@@ -45,16 +45,14 @@ public class EnemyDetector : MonoBehaviour
         _attacking = false;
 
         // Call the parent turret's function to stop attacking
+        Debug.Log("Stopping attacking");
+        turretScript.StopAttacking();
 
         if (_viableTargets.Count > 0)
         {
             // Get the first viable target 
             int newId = _viableTargets.ElementAt(0);
             TryAttacking(newId);
-        } else
-        {
-            Debug.Log("Stopping attacking");
-            turretScript.StopAttacking();
-        }
+        } 
     }
 }
