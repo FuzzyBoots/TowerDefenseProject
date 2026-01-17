@@ -7,24 +7,32 @@ public class EnemyDetector : MonoBehaviour
 {
     HashSet<int> _viableTargets = new HashSet<int>();
     bool _attacking = false;
+    int _currentTarget;
 
     TurretScript turretScript;
 
     private void Awake()
     {
         turretScript = GetComponent<TurretScript>();
+
+        EventManager.OnDeath += RemoveTarget;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        int id = other.GetInstanceID();
+        int id = other.gameObject.GetEntityId();
         _viableTargets.Add(id);
         TryAttacking(id);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        int id = other.GetInstanceID();
+        int id = other.gameObject.GetEntityId();
+        RemoveTarget(id);
+    }
+
+    private void RemoveTarget(int id)
+    {
         _viableTargets.Remove(id);
         TryStopAttacking(id);
     }
@@ -34,6 +42,7 @@ public class EnemyDetector : MonoBehaviour
         // If we're already attacking, we return
         if ( _attacking ) { return; }
         _attacking = true;
+        _currentTarget = id;
 
         // Call the parent turret's attack function
         turretScript.StartAttacking(id);
@@ -42,6 +51,8 @@ public class EnemyDetector : MonoBehaviour
     private void TryStopAttacking(int id)
     {
         if (!_attacking) { return; }
+        if (_currentTarget != id) { return; }
+
         _attacking = false;
 
         // Call the parent turret's function to stop attacking

@@ -3,19 +3,36 @@ using UnityEngine;
 
 public class TargetScript : MonoBehaviour
 {
+    int _entityID;
+    float _health = 50f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        EventManager.SubscribeToDamage(gameObject.GetInstanceID(), Damage);
+        _entityID = gameObject.GetEntityId();
+        EventManager.SubscribeToDamage(_entityID, Damage);
+        TargetDatabase.RegisterTarget(_entityID, this);
     }
 
     private void OnDisable()
     {
-        EventManager.UnsubscribeToDamage(gameObject.GetInstanceID());
+        EventManager.UnsubscribeToDamage(_entityID);
+        TargetDatabase.UnregisterTarget(_entityID);
     }
 
     private void Damage(float damage)
     {
         Debug.Log($"Object {gameObject.name} - Damage for {damage}");
+        _health -= damage;
+        if (_health <= 0)
+        {
+            Debug.Log($"Object {gameObject.name} - Died");
+            EventManager.OnDeath?.Invoke(_entityID);
+            gameObject.SetActive(false);
+        }
+    }
+
+    public int EntityID()
+    {
+        return _entityID;
     }
 }
