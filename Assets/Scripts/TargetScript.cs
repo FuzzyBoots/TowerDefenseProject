@@ -5,6 +5,7 @@ public class TargetScript : MonoBehaviour
 {
     int _entityID;
     float _health = 50f;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -34,5 +35,19 @@ public class TargetScript : MonoBehaviour
     public int EntityID()
     {
         return _entityID;
+    }
+
+    internal void Kill(GameObject obstaclePrefab = null)
+    {
+        if (obstaclePrefab)
+        {
+            // Spawn a NavMeshObstacle
+            GameObject obstacle = Instantiate(obstaclePrefab);
+            obstacle.transform.position = transform.position;
+            // Debug.Break();
+        }
+
+        // Destroy yourself.
+        Destroy(gameObject, 0.1f);
     }
 }

@@ -1007,8 +1007,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992704992}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.1153187, y: 0.88464606, z: -0.3152327, w: -0.32362214}
-  m_LocalPosition: {x: 8.236799, y: 8.585724, z: 5.6737556}
+  m_LocalRotation: {x: -0.21491921, y: 0.7124826, z: -0.24668081, w: -0.6207471}
+  m_LocalPosition: {x: 6.8155956, y: 4.8510237, z: -3.2988338}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2106,6 +2106,18 @@ PrefabInstance:
     - target: {fileID: 1121627501929619343, guid: 1fb05b6c6c16e6d419878bc73c43c275, type: 3}
       propertyPath: m_Name
       value: Turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500618910228403502, guid: 1fb05b6c6c16e6d419878bc73c43c275, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500618910228403502, guid: 1fb05b6c6c16e6d419878bc73c43c275, type: 3}
+      propertyPath: prewarm
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4500618910228403502, guid: 1fb05b6c6c16e6d419878bc73c43c275, type: 3}
+      propertyPath: lengthInSec
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
