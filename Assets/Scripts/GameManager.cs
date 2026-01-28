@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject _obstaclePrefab;
 
     [SerializeField] float _cameraMoveSpeed = 5f;
+    [SerializeField] float _cameraRotationSpeed = 30f;
 
     Vector2 _movementAmount = Vector2.zero;
     InputAction _inputMove;
+    InputAction _inputRotate;
     [SerializeField] private float _cameraChangeSpeed = 0.5f;
 
     private void Awake()
@@ -21,14 +23,7 @@ public class GameManager : MonoBehaviour
         _camera = Camera.main;
 
         _inputMove = InputSystem.actions.FindAction("Move");
-        //_inputMove.performed += HandleCameraMovement;
-        //_inputMove.canceled += CameraMovementEnded;
-    }
-
-    private void CameraMovementEnded(InputAction.CallbackContext context)
-    {
-        Debug.Log("Dead stick?");
-        Debug.Log(context.ReadValue<Vector2>());
+        _inputRotate = InputSystem.actions.FindAction("Rotate");
     }
 
     private void HandleCameraMovement()
@@ -36,9 +31,23 @@ public class GameManager : MonoBehaviour
         _movementAmount = _inputMove.ReadValue<Vector2>();
         if (_movementAmount != Vector2.zero)
         {
-            Debug.Log("Moving camera by: " + _movementAmount);
-            Vector3 move = new Vector3(_movementAmount.x, 0, _movementAmount.y);
-            _camera.transform.position += move * _cameraMoveSpeed * Time.deltaTime;
+            Vector3 camForward = _camera.transform.forward;
+            Vector3 camRight = _camera.transform.right;
+            
+            camForward.y = 0;
+            camRight.y = 0;
+
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 move = camForward * _movementAmount.y + camRight * _movementAmount.x;
+            _camera.transform.position += _cameraMoveSpeed * Time.deltaTime * move;
+        }
+
+        float _cameraRotationAmount = _inputRotate.ReadValue<float>();
+        if (_cameraRotationAmount != 0f)
+        {
+            _camera.transform.Rotate(Vector3.up, _cameraRotationAmount * _cameraRotationSpeed * Time.deltaTime);
         }
     }
 
