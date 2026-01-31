@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float _cameraMoveSpeed = 5f;
     [SerializeField] float _cameraRotationSpeed = 30f;
 
+    [SerializeField] Transform _lookAtPoint;
+
     Vector2 _movementAmount = Vector2.zero;
     InputAction _inputMove;
     InputAction _inputRotate;
@@ -41,13 +43,13 @@ public class GameManager : MonoBehaviour
             camRight.Normalize();
 
             Vector3 move = camForward * _movementAmount.y + camRight * _movementAmount.x;
-            _camera.transform.position += _cameraMoveSpeed * Time.deltaTime * move;
+            _lookAtPoint.position += _cameraMoveSpeed * Time.deltaTime * move;
         }
 
         float _cameraRotationAmount = _inputRotate.ReadValue<float>();
         if (_cameraRotationAmount != 0f)
         {
-            _camera.transform.Rotate(Vector3.up, _cameraRotationAmount * _cameraRotationSpeed * Time.deltaTime);
+            _lookAtPoint.transform.Rotate(Vector3.up, _cameraRotationAmount * _cameraRotationSpeed * Time.deltaTime);
         }
     }
 
@@ -75,4 +77,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public bool _placingTurret;
+
+    [SerializeField] GameObject _turretPrefab;
 }

@@ -8,6 +8,11 @@ public class EventManager
 
     private static Dictionary<int, Action<float>> _damageSubscriptions = new Dictionary<int, Action<float>>();
 
+    public static void ClearDamageSubscriptions()
+    {
+        _damageSubscriptions.Clear();
+    }
+
     public static void SubscribeToDamage(int targetID, Action<float> callback)
     {
         _damageSubscriptions[targetID] = callback;
