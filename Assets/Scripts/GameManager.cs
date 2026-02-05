@@ -3,6 +3,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+enum GameState
+{
+    PlacementMode,
+    ViewMode
+}
+
 public class GameManager : MonoBehaviour
 {
     Camera _camera;
@@ -19,6 +25,8 @@ public class GameManager : MonoBehaviour
     InputAction _inputMove;
     InputAction _inputRotate;
     [SerializeField] private float _cameraChangeSpeed = 0.5f;
+
+    [SerializeField] private GameState _currentMode = GameState.ViewMode;
 
     private void Awake()
     {
