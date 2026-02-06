@@ -12,7 +12,7 @@ public class PlacementManager : MonoBehaviour
     [SerializeField] LayerMask _placementLayer;
     private bool _overPlacement;
 
-    private void Start()
+    private void Awake()
     {
         CinemachineCore.CameraUpdatedEvent.AddListener(CameraUpdate);
     }

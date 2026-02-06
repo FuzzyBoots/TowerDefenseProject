@@ -1,10 +1,17 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class EventManager
 {
     public static Action<int> OnDeath;
+
+    public static Action OnStartPlacement;
+    public static Action OnStopPlacement;
+
+    public static Action<int> OnFundsChange;
+    public static Action<int> OnPurseChange;
 
     private static Dictionary<int, Action<float>> _damageSubscriptions = new Dictionary<int, Action<float>>();
 
