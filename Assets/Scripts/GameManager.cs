@@ -66,24 +66,24 @@ public class GameManager : MonoBehaviour
     {
         HandleCameraMovement();
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _enemyLayers))
-            {
-                if (hit.collider.gameObject.TryGetComponent<TargetScript>(out TargetScript target))
-                {
-                    target.Kill(_obstaclePrefab);
-                }
-            }
-            if (Physics.Raycast(ray, out RaycastHit turretHit, Mathf.Infinity, _turretLayers))
-            {
-                if (turretHit.collider.gameObject.TryGetComponent<TurretScript>(out TurretScript turret))
-                {
-                    Debug.Log("Tagged Turret: " + turretHit.collider.gameObject.name);
-                }
-            }
-        }
+        //if (Mouse.current.leftButton.wasPressedThisFrame)
+        //{
+        //    Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        //    if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _enemyLayers))
+        //    {
+        //        if (hit.collider.gameObject.TryGetComponent<TargetScript>(out TargetScript target))
+        //        {
+        //            target.Kill(_obstaclePrefab);
+        //        }
+        //    }
+        //    if (Physics.Raycast(ray, out RaycastHit turretHit, Mathf.Infinity, _turretLayers))
+        //    {
+        //        if (turretHit.collider.gameObject.TryGetComponent<TurretScript>(out TurretScript turret))
+        //        {
+        //            Debug.Log("Tagged Turret: " + turretHit.collider.gameObject.name);
+        //        }
+        //    }
+        //}
     }
 
     public bool _placingTurret;

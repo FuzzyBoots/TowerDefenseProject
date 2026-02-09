@@ -8,9 +8,10 @@ using UnityEngine.InputSystem;
 
 public class PlacementManager : MonoBehaviour
 {
-    [SerializeField] GameObject _currentPrefab;
+    [SerializeField] TurretScript _currentTurret;
     [SerializeField] LayerMask _placementLayer;
     private bool _overPlacement;
+    PlacementPoint _placementPoint;
 
     private void Awake()
     {
@@ -20,70 +21,84 @@ public class PlacementManager : MonoBehaviour
     private void CameraUpdate(CinemachineBrain arg0)
     {
         Vector3 turretPosition;
+        Vector3 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
-        if (_currentPrefab != null)
+        if (_currentTurret != null)
         {
-            Vector3 mousePosition = Mouse.current.position.ReadValue();
-            Ray ray = Camera.main.ScreenPointToRay(mousePosition);
-
+            
             Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red);
 
-            RaycastHit raycastHit;
-            if (Physics.Raycast(ray, out raycastHit, 100f, _placementLayer, QueryTriggerInteraction.Collide))
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, 100f, _placementLayer, QueryTriggerInteraction.Collide))
             {
                 Collider targetCollider = raycastHit.collider;
                 // Different behavior for a Placement Point or a Wall/Floor
                 if (targetCollider.gameObject.layer == LayerMask.NameToLayer("Placement"))
                 {
+                    _placementPoint = targetCollider.GetComponent<PlacementPoint>();
                     Debug.Log("Placement at " + targetCollider.transform.position);
                     _overPlacement = true;
-                    _currentPrefab.transform.position = targetCollider.transform.position;
-                } else
+                    _currentTurret.transform.position = targetCollider.transform.position;
+                }
+                else
                 {
                     _overPlacement = false;
                     float topY = targetCollider.bounds.max.y;
 
                     turretPosition = new(raycastHit.point.x, topY, raycastHit.point.z);
-                    _currentPrefab.transform.position = turretPosition;
-                }                    
+                    _currentTurret.transform.position = turretPosition;
+                }
             }
-        }
 
-        if (Mouse.current.leftButton.wasPressedThisFrame && !IsCursorOverUI())
-        {
-            Debug.Log("Clicked");
-            if (_overPlacement)
+            if (Mouse.current.leftButton.wasPressedThisFrame && !IsCursorOverUI())
             {
-                Debug.Log("Placed?");
-                // Place the turret at turretPosition and activate it
-                // We'll assign a new copy to the one we're moving... will this work?
-                _currentPrefab = Instantiate(_currentPrefab);
+                if (_overPlacement)
+                {
+                    // Place the turret at turretPosition and activate it
+                    // We'll assign a new copy to the one we're moving... will this work?
+                    _currentTurret = Instantiate(_currentTurret);
+                    _placementPoint.SetTurret(_currentTurret);
+                }
             }
-        }
 
-        if (Mouse.current.rightButton.wasPressedThisFrame)
+            if (Mouse.current.rightButton.wasPressedThisFrame)
+            {
+                Debug.Log("Canceled");
+                CancelSetting();
+            }
+        } else
         {
-            Debug.Log("Canceled");
-            CancelSetting();
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                if (Physics.Raycast(ray, out RaycastHit raycastHit, 100f, LayerMask.GetMask("Placement"), QueryTriggerInteraction.Collide))
+                {
+                    // Bring up upgrade dialog
+                    Debug.Log("Upgade Dialog");
+                }
+            }
         }
     }
 
-    public void SetPrefab(GameObject prefab)
+    public void SetPrefab(TurretScript prefab)
     {
-        if (_currentPrefab != null)
+        if (_currentTurret != null)
         {
-            Destroy(_currentPrefab);
+            Destroy(_currentTurret.gameObject);
         }
 
-        _currentPrefab = Instantiate(prefab);
+        EventManager.OnStartPlacement?.Invoke();
+
+        _currentTurret = Instantiate(prefab);
     }
 
     public void CancelSetting()
     {
-        if (_currentPrefab)
+        if (_currentTurret)
         {
-            Destroy(_currentPrefab);
+            Destroy(_currentTurret.gameObject);
         }
+
+        EventManager.OnStopPlacement?.Invoke();
     }
 
     private bool IsCursorOverUI()
