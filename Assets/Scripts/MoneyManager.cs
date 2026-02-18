@@ -23,6 +23,10 @@ public class MoneyManager : MonoBehaviour
 
     private void Start()
     {
+<<<<<<< HEAD
+=======
+        Debug.Log($"Started up with Funds: {_warFunds} and Purse: {_warPurse}");
+>>>>>>> 87257ea634e2d3b76102044d9aef7a198090c5dd
         EventManager.OnFundsChange?.Invoke(_warFunds);
         EventManager.OnPurseChange?.Invoke(_warPurse);
     }
