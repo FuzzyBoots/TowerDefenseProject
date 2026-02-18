@@ -5,9 +5,14 @@ using UnityEngine;
 public class TurretScript : MonoBehaviour
 {
     Coroutine attackRoutine;
+<<<<<<< HEAD
 
     [SerializeField] TurretSO _turretData;
     
+=======
+    // For the first approximation, we'll just have the turret firing intermittently
+
+>>>>>>> 67b22065 (I think mostly stable)
     [SerializeField] ParticleSystem _firingParticles;
 
     private float _readyToFire = 0;
