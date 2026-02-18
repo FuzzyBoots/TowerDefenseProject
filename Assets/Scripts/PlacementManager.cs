@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 
 public class PlacementManager : MonoBehaviour
 {
-    [SerializeField] GameObject _currentPrefab;
+    [SerializeField] TurretScript _currentTurret;
+    [SerializeField] float _placementCost;
     [SerializeField] LayerMask _placementLayer;
     private bool _overPlacement;
 
@@ -21,43 +22,48 @@ public class PlacementManager : MonoBehaviour
     {
         Vector3 turretPosition;
 
-        if (_currentPrefab != null)
+        if (_currentTurret != null)
         {
             Vector3 mousePosition = Mouse.current.position.ReadValue();
             Ray ray = Camera.main.ScreenPointToRay(mousePosition);
 
             Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red);
 
-            RaycastHit raycastHit;
-            if (Physics.Raycast(ray, out raycastHit, 100f, _placementLayer, QueryTriggerInteraction.Collide))
+            if (Physics.Raycast(ray, out RaycastHit raycastHit, 100f, _placementLayer, QueryTriggerInteraction.Collide))
             {
                 Collider targetCollider = raycastHit.collider;
                 // Different behavior for a Placement Point or a Wall/Floor
                 if (targetCollider.gameObject.layer == LayerMask.NameToLayer("Placement"))
                 {
-                    Debug.Log("Placement at " + targetCollider.transform.position);
+                    // TODO: We need to check to be sure the Placement Point is not already occupied...
+                    // maybe it should be disabled when occupied?
                     _overPlacement = true;
-                    _currentPrefab.transform.position = targetCollider.transform.position;
-                } else
+                    _currentTurret.transform.position = targetCollider.transform.position;
+                }
+                else
                 {
                     _overPlacement = false;
                     float topY = targetCollider.bounds.max.y;
 
                     turretPosition = new(raycastHit.point.x, topY, raycastHit.point.z);
-                    _currentPrefab.transform.position = turretPosition;
-                }                    
+                    _currentTurret.transform.position = turretPosition;
+                }
             }
         }
 
         if (Mouse.current.leftButton.wasPressedThisFrame && !IsCursorOverUI())
         {
-            Debug.Log("Clicked");
             if (_overPlacement)
             {
-                Debug.Log("Placed?");
-                // Place the turret at turretPosition and activate it
-                // We'll assign a new copy to the one we're moving... will this work?
-                _currentPrefab = Instantiate(_currentPrefab);
+                if (_currentTurret.GetTurretData()._cost <= MoneyManager.Instance.GetWarFunds())
+                {
+                    // Should this be handled as part of a general validity check?
+
+                    // Place the turret at turretPosition and activate it
+                    // We'll assign a new copy to the one we're moving... will this work?
+                    _currentTurret = Instantiate(_currentTurret);
+                    MoneyManager.Instance.DeductFunds(_currentTurret.GetTurretData()._cost);
+                }
             }
         }
 
@@ -68,21 +74,21 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    public void SetPrefab(GameObject prefab)
+    public void SetPrefab(TurretScript turret)
     {
-        if (_currentPrefab != null)
+        if (_currentTurret != null)
         {
-            Destroy(_currentPrefab);
+            Destroy(_currentTurret.gameObject);
         }
 
-        _currentPrefab = Instantiate(prefab);
+        _currentTurret = Instantiate(turret);
     }
 
     public void CancelSetting()
     {
-        if (_currentPrefab)
+        if (_currentTurret)
         {
-            Destroy(_currentPrefab);
+            Destroy(_currentTurret.gameObject);
         }
     }
 

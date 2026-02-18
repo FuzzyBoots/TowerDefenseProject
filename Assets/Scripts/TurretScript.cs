@@ -5,13 +5,9 @@ using UnityEngine;
 public class TurretScript : MonoBehaviour
 {
     Coroutine attackRoutine;
-    // For the first approximation, we'll just have the turret firing intermittently
 
-    [SerializeField] float _attackInterval = 1f;
-    [SerializeField] float _rotationSpeed = 5f;
-    [SerializeField] float _attackRange = 10f;
-    [SerializeField] float _attackDamage = 10f;
-
+    [SerializeField] TurretSO _turretData;
+    
     [SerializeField] ParticleSystem _firingParticles;
 
     private float _readyToFire = 0;
@@ -21,6 +17,8 @@ public class TurretScript : MonoBehaviour
         if (!_firingParticles)
             _firingParticles = GetComponent<ParticleSystem>();
     }
+
+    public TurretSO GetTurretData() { return _turretData; }
 
     internal void StartAttacking(int id)
     {
@@ -45,10 +43,10 @@ public class TurretScript : MonoBehaviour
         {
             // Rotate toward the target
             Vector3 directionToTarget = (targetObject.transform.position - transform.position).normalized;
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, directionToTarget, _rotationSpeed * Time.deltaTime, 0);
+            Vector3 newDirection = Vector3.RotateTowards(transform.forward, directionToTarget, _turretData._rotationSpeed * Time.deltaTime, 0);
             transform.rotation = Quaternion.LookRotation(newDirection);
 
-            if (_readyToFire <= Time.time && Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, _attackRange))
+            if (_readyToFire <= Time.time && Physics.Raycast(transform.position, transform.forward, out RaycastHit hitInfo, _turretData._attackRange))
             {
                 if (hitInfo.collider.gameObject != targetObject)
                 {
@@ -60,8 +58,8 @@ public class TurretScript : MonoBehaviour
                 {
                     Debug.Log($"Firing at {targetObject.name} - {target.EntityID()}");
                     _firingParticles.Play();
-                    EventManager.BroadcastDamage(target.EntityID(), _attackDamage);
-                    _readyToFire = Time.time + _attackInterval;
+                    EventManager.BroadcastDamage(target.EntityID(), _turretData._attackDamage);
+                    _readyToFire = Time.time + _turretData._attackInterval;
                 }
             }
             else

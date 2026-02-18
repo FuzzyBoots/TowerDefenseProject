@@ -23,9 +23,8 @@ public class MoneyManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"Started up with Funds: {_warFunds} and Purse: {_warPurse}");
-        EventManager.OnFundsChange.Invoke(_warFunds);
-        EventManager.OnPurseChange.Invoke(_warPurse);
+        EventManager.OnFundsChange?.Invoke(_warFunds);
+        EventManager.OnPurseChange?.Invoke(_warPurse);
     }
 
     public void DeductFunds(int amount)

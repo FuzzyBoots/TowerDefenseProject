@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d35fb60cb7f886d43a33945a11566d53, type: 3}
+  m_Name: Lazer
+  m_EditorClassIdentifier: Assembly-CSharp::TurretSO
+  _cost: 200
+  _prefab: {fileID: 2195496196935378799, guid: 7e771648e2f2d6043b33a8c2292d592c, type: 3}
+  _thumbnail: {fileID: 0}
+  _attackInterval: 1
+  _rotationSpeed: 5
+  _attackRange: 10
+  _attackDamage: 10
+  _upgradeOption: {fileID: 0}
+  _upgradeCost: 0
+  _scrapValue: 0
