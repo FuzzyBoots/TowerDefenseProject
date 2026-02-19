@@ -20,14 +20,14 @@ public class EnemyDetector : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        int id = other.gameObject.GetEntityId();
+        int id = other.gameObject.GetInstanceID();
         _viableTargets.Add(id);
         TryAttacking(id);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        int id = other.gameObject.GetEntityId();
+        int id = other.gameObject.GetInstanceID();
         RemoveTarget(id);
     }
 

@@ -9,7 +9,7 @@ public class TargetScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        _entityID = gameObject.GetEntityId();
+        _entityID = gameObject.GetInstanceID();
         EventManager.SubscribeToDamage(_entityID, Damage);
         TargetDatabase.RegisterTarget(_entityID, this);
     }

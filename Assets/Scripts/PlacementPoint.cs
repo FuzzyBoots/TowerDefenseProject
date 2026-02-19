@@ -46,10 +46,4 @@ public class PlacementPoint : MonoBehaviour
         _turret = null;
         _beacon.Play();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
